@@ -1,2 +1,26 @@
-# EverShop-website-QA
-QA Portfolio Project – EverShop E-Commerce Demo Testing End-to-end QA project on the EverShop open-source e-commerce platform (demo.evershop.io), covering test planning, manual testing (119 test cases across 9 functional areas), API testing with Postman, and E2E automation with Playwright. Completed as part of Buildgem Cohort 2.
+# 🚀 QA Portfolio: API & UI Testing Suite
+
+Welcome to my QA testing repository! This project contains automated API tests (using **Postman**) and end-to-end web automation tests (using **Playwright**). 
+
+Follow the guide below to set up the project on your computer, open the files, and run the tests.
+
+---
+
+## 🛠️ Prerequisites
+
+Before you begin, make sure you have the following installed on your computer:
+* [Node.js](https://nodejs.org/) (LTS Version recommended)
+* [Visual Studio Code (VS Code)](https://code.visualstudio.com/) (or your preferred code editor)
+* [Postman](https://www.postman.com/downloads/) (Desktop app)
+* [Git](https://git-scm.com/)
+
+---
+
+## 📥 1. How to Get the Code on Your Computer
+
+To work on these files locally, you need to clone (download) this repository:
+
+1. Click the green **Code** button at the top of this GitHub page and copy the URL.
+2. Open your terminal (Mac) or Command Prompt (Windows) and run:
+   ```bash
+   git clone <PASTE_THE_URL_HERE>
