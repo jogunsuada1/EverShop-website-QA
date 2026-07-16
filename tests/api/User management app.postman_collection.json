@@ -1,0 +1,620 @@
+{
+  "info": {
+    "_postman_id": "35103857-0923-408a-a0a3-6d166e276146",
+    "name": "User management app",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "29488224"
+  },
+  "item": [
+    {
+      "name": "USER",
+      "item": [
+        {
+          "name": "Create User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"user_Id\" , pm.response.json().userId)\r",
+                  "\r",
+                  "\r",
+                  "// Parse the raw body into a JSON object\r",
+                  "const body = JSON.parse(pm.request.body.raw);\r",
+                  "\r",
+                  "// Access the password property\r",
+                  "const randpassword = body.password;\r",
+                  "\r",
+                  "const randrole = body.role\r",
+                  "\r",
+                  "// Save it to a collection variable\r",
+                  "pm.collectionVariables.set(\"pass\", randpassword);\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"role\", randrole);\r",
+                  "\r",
+                  "  //tests\r",
+                  "\r",
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "const createSchema = {\r",
+                  "\r",
+                  "  \"type\": \"object\",\r",
+                  "  \"properties\": {\r",
+                  "    \"message\": {\r",
+                  "      \"type\": \"string\"\r",
+                  "    },\r",
+                  "    \"userId\": {\r",
+                  "      \"type\": \"string\"\r",
+                  "    }\r",
+                  "  },\r",
+                  "  \"required\": [\r",
+                  "    \"message\",\r",
+                  "    \"userId\"\r",
+                  "  ]\r",
+                  "}\r",
+                  "\r",
+                  "pm.test(\"verify valid schema\" , function () {\r",
+                  "    pm.response.to.have.jsonSchema(createSchema)\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.execution.setNextRequest(\"Login\");\r",
+                  "\r",
+                  "// This runs before EVERY request in the collection\r",
+                  "const randomUser = `joseven${Math.floor(Math.random() * 10000)}`;\r",
+                  "pm.collectionVariables.set(\"username\", randomUser);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"{{username}}\",\r\n    \"password\": \"{{$randomPassword}}\",\r\n    \"role\": \"{{$randomJobTitle}}\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"state\": \"{{$randomCity}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base_Url}}/api/v1/user",
+              "host": [
+                "{{Base_Url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// set auth value\r",
+                  "\r",
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "const loginSchema = {\r",
+                  "  \r",
+                  "  \"type\": \"object\",\r",
+                  "  \"properties\": {\r",
+                  "    \"accessToken\": {\r",
+                  "      \"type\": \"string\"\r",
+                  "    },\r",
+                  "    \"expireDurationSeconds\": {\r",
+                  "      \"type\": \"number\"\r",
+                  "    },\r",
+                  "    \"refreshToken\": {\r",
+                  "      \"type\": \"string\"\r",
+                  "    }\r",
+                  "  },\r",
+                  "  \"required\": [\r",
+                  "    \"accessToken\",\r",
+                  "    \"expireDurationSeconds\",\r",
+                  "    \"refreshToken\"\r",
+                  "  ]\r",
+                  "}\r",
+                  "\r",
+                  "pm.environment.set(\"access_token\", response.accessToken);  \r",
+                  "\r",
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"verify schema\" , function () {\r",
+                  "    pm.response.to.have.jsonSchema(loginSchema);\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "packages": {},
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{pass}}\",\r\n  \"role\": \"{{role}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base_Url}}/api/v1/auth/login",
+              "host": [
+                "{{Base_Url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "  //verify status code is 200\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "  //verify schema\r",
+                  "const schema = {\r",
+                  "\r",
+                  "  \"type\": \"object\",\r",
+                  "  \"properties\": {\r",
+                  "    \"username\": {\r",
+                  "      \"type\": \"string\"\r",
+                  "    },\r",
+                  "    \"role\": {\r",
+                  "      \"type\": \"string\"\r",
+                  "    },\r",
+                  "    \"firstName\": {\r",
+                  "      \"type\": \"string\"\r",
+                  "    },\r",
+                  "    \"lastName\": {\r",
+                  "      \"type\": \"string\"\r",
+                  "    },\r",
+                  "    \"state\": {\r",
+                  "      \"type\": \"string\"\r",
+                  "    }\r",
+                  "  },\r",
+                  "  \"required\": [\r",
+                  "    \"username\",\r",
+                  "    \"role\",\r",
+                  "    \"firstName\",\r",
+                  "    \"lastName\",\r",
+                  "    \"state\"\r",
+                  "  ]\r",
+                  "}\r",
+                  "\r",
+                  "pm.test(\"verify schema\" , function() {\r",
+                  "    pm.response.to.have.jsonSchema(schema)\r",
+                  "});\r",
+                  "\r",
+                  "  //verify user details\r",
+                  "// Optional: Check other details like name or email if you saved those too\r",
+                  "pm.test(\"User name is correct\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    const savedName = pm.collectionVariables.get(\"user_name\");\r",
+                  "    \r",
+                  "    if (savedName) {\r",
+                  "        pm.expect(jsonData.name).to.eql(savedName);\r",
+                  "    }\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base_Url}}/api/v1/user/{{user_Id}}",
+              "host": [
+                "{{Base_Url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "{{user_Id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update user full",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// verify schema\r",
+                  "const schema = {\r",
+                  " \r",
+                  "  \"type\": \"object\",\r",
+                  "  \"properties\": {\r",
+                  "    \"message\": {\r",
+                  "      \"type\": \"string\"\r",
+                  "    }\r",
+                  "  },\r",
+                  "  \"required\": [\r",
+                  "    \"message\"\r",
+                  "  ]\r",
+                  "}\r",
+                  "\r",
+                  "pm.test(\"verify schema\" , function () {\r",
+                  "    pm.response.to.have.jsonSchema(schema);\r",
+                  "    })"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"firstName\": \"{{$randomFirstName}}\",\r\n  \"lastName\": \"{{$randomLastName}}\",\r\n  \"state\": \"{{$randomJobTitle}}\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base_Url}}/api/v1/user/{{user_Id}}",
+              "host": [
+                "{{Base_Url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "{{user_Id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update user partial",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// verify schema\r",
+                  "const schema = {\r",
+                  " \r",
+                  "  \"type\": \"object\",\r",
+                  "  \"properties\": {\r",
+                  "    \"message\": {\r",
+                  "      \"type\": \"string\"\r",
+                  "    }\r",
+                  "  },\r",
+                  "  \"required\": [\r",
+                  "    \"message\"\r",
+                  "  ]\r",
+                  "}\r",
+                  "\r",
+                  "pm.test(\"verify schema\" , function () {\r",
+                  "    pm.response.to.have.jsonSchema(schema);\r",
+                  "    })"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"firstName\": \"{{$randomFirstName}}\",\r\n  \"lastName\": \"{{$randomLastName}}\",\r\n  \"state\": \"{{$randomCity}}\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base_Url}}/api/v1/user/{{user_Id}}",
+              "host": [
+                "{{Base_Url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "{{user_Id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "if (pm.response.code === 200) {\r",
+                  "    pm.test(\"Success: User deleted\", function () {\r",
+                  "        pm.response.to.have.status(200);\r",
+                  "    });\r",
+                  "} else {\r",
+                  "    // This is your negative test branch\r",
+                  "    pm.test(\"Failure: Correct error handling for \" + pm.response.code, function () {\r",
+                  "        pm.expect(pm.response.code).to.be.oneOf([401, 403]);\r",
+                  "        pm.expect(jsonData.detail).to.eql(\"Unauthorized\");\r",
+                  "    });\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{Base_Url}}/api/v1/user/{{user_Id}}",
+              "host": [
+                "{{Base_Url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "{{user_Id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{accessToken}}",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "default",
+      "item": [
+        {
+          "name": "Health check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base_Url}}/health",
+              "host": [
+                "{{Base_Url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "user_Id",
+      "value": ""
+    },
+    {
+      "key": "username",
+      "value": ""
+    },
+    {
+      "key": "us",
+      "value": ""
+    },
+    {
+      "key": "pass",
+      "value": ""
+    },
+    {
+      "key": "role",
+      "value": ""
+    }
+  ]
+}
