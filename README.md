@@ -1,26 +1,70 @@
-# 🚀 QA Portfolio: API & UI Testing Suite
+# EverShop QA Portfolio Project
 
-Welcome to my QA testing repository! This project contains automated API tests (using **Postman**) and end-to-end web automation tests (using **Playwright**). 
+End-to-end QA portfolio project built on the [EverShop open-source e-commerce demo platform](https://demo.evershop.io/). Completed as part of **Buildgem Cohort 2**, mentored and reviewed by **Kingsley Udoh**.
 
-Follow the guide below to set up the project on your computer, open the files, and run the tests.
+## About
 
----
+This project demonstrates full-cycle QA competency — from planning to automation to reporting — against a live demo e-commerce application (storefront + admin panel).
 
-## 🛠️ Prerequisites
+## Project Phases
 
-Before you begin, make sure you have the following installed on your computer:
-* [Node.js](https://nodejs.org/) (LTS Version recommended)
-* [Visual Studio Code (VS Code)](https://code.visualstudio.com/) (or your preferred code editor)
-* [Postman](https://www.postman.com/downloads/) (Desktop app)
-* [Git](https://git-scm.com/)
+1. **Test Planning** — PRD review and System Test Plan
+2. **Manual Testing** — 119 test cases across 9 functional areas
+3. **API Testing** — Postman collection + dedicated API Test Strategy Document
+4. **E2E Automation** — Playwright test suite (JavaScript)
+5. **Defect Reporting** — Bug Report and Final Test Summary Report
 
----
+## Repo Structure
 
-## 📥 1. How to Get the Code on Your Computer
+```
+├── docs/
+│   ├── PRD.docx
+│   ├── System_Test_Plan.docx
+│   ├── API_Test_Strategy.docx
+│   ├── Bug_Report.docx
+│   └── Test_Summary_Report.docx
+├── postman/
+│   └── evershop-api-collection.json
+├── tests/
+│   └── *.spec.js
+├── playwright.config.js
+└── README.md
+```
 
-To work on these files locally, you need to clone (download) this repository:
+## Tech Stack
 
-1. Click the green **Code** button at the top of this GitHub page and copy the URL.
-2. Open your terminal (Mac) or Command Prompt (Windows) and run:
-   ```bash
-   git clone <PASTE_THE_URL_HERE>
+- **Playwright** (JavaScript) — E2E automation
+- **Postman** — API testing
+- **EverShop Demo** — [demo.evershop.io](https://demo.evershop.io/) (system under test)
+
+## Running the Tests
+
+```bash
+npm install
+npx playwright test
+```
+
+Report:
+```bash
+npx playwright show-report
+```
+
+## Key QA Principles Followed
+
+- Dynamic waits only (`toBeVisible()`, `waitForLoadState()`, etc.) — no fixed `waitForTimeout()`
+- Case-insensitive regex locators for cross-browser stability
+- Single `playwright.config.js`; specs isolated under `/tests`
+
+## Deliverables
+
+- Product Requirements Document (PRD)
+- System Test Plan
+- API Test Strategy Document
+- Postman Collection
+- Playwright E2E Automation Suite
+- Bug Report
+- Final Test Summary Report
+
+## Author
+
+**Ogunsuada Joseph** — QA Engineer, Buildgem Cohort 2
